@@ -1,0 +1,16 @@
+---
+# To capture ec2 OS level metrics,
+# you need to install AWS scripts (Perl):
+#
+- hosts: webservers # Amazon Linux AMI servers
+  become: true
+  tasks:
+      - name: Install OS metrics scripts - Amazon Linux AMI
+        yum: name={{item}} state=latest
+        with_items:
+            - perl-Switch
+            - perl-DateTime
+            - perl-Sys-Syslog
+            - perl-LWP-Protocol-https
+
+# END

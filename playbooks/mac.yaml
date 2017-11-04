@@ -1,0 +1,62 @@
+---
+# Configure Macbook
+#
+#   Install
+#    + python
+#       - socat program
+#       - psutil python package
+#       - mercurial python package
+#       - pygit2 python package or git executable
+#       - bzr python package
+#       - pyuv python package
+#       - i3-ipc python package
+#       - xrandr program
+#    - Atom text editor ???
+#    - Ansible
+#    - Vagrant
+#    - VirtualBox
+#    - Homebrew
+#    - Boto 3 (AWS SDK for Python)
+#    - Dropbox
+#    - JDK
+#    - git and/or curl ???
+#    - Google Chrome
+#    - Mozilla Firefox
+#    - Yamaha AG06 controller
+#    - Kindle
+#    - Microsoft Silverlight
+#    - p4Merge
+#    - Slack
+#    - VLC
+#    - Xcode
+#    - Wireshark
+#    - Adobe Flash Player
+#    - Logitech Unifying Software
+#    - iTerm2
+#    - RPN Calculator (still looking for one)
+#
+#   Manual configuration
+#    - enable ssh
+#    - import contacts
+#    - set desktop wallpaper
+#    - switch keyboard command and control keys
+#    - change desktop mac internal drive icon
+#    - add/remove apps to launchpad
+#    - TimeMachine
+#    - set mouse tracking rate
+#    - set trackpad tracking rate
+#    - configure email accounts
+#    - configure Mac Calendar to sync with google calendar
+#    - configure Messenges
+#    - configure Internet Accounts
+#    - restore dot and config files
+#         ~/.bashrc
+#         ~/.gitconfig
+#         ~/.vimrc
+#         ~/ansible/ansible.cfg
+#         ~/ansible/playbooks
+#         ~/ansible/templates
+#         ~/repos
+#         ~/Documents
+#
+# END

@@ -1,0 +1,20 @@
+---
+#
+# Ansible equivalent of:  yum update -y with reboot if needed
+#
+# 1. See if there are updated packages available
+# 2. Update all packages to the lastest level
+# 3. Reboot
+#
+- hosts: webservers
+  become: true
+  tasks:
+      - name: update all installed packages
+        yum:
+            name: "*"
+            state: latest
+
+      - name: reboot server
+        command: shutdown -r now "Reboot required after kernel update"
+
+# END

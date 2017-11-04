@@ -1,0 +1,16 @@
+---
+# build Ansible Controller on Mac OS X
+# manual prequisite steps:
+#   * Ensure OS has latest updates
+#   * Install xcode:
+#        $ xcode-select --install
+#   * Configure Mac Mail  email accounts
+#   * 
+#
+#
+#
+- hosts: control
+  become: true
+  tasks:
+      - name: install tools
+        

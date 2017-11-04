@@ -1,0 +1,18 @@
+---
+# aws-cli requires python and pip.
+# pip is a package manager for python.
+#
+- hosts: webservers
+  become: true
+  tasks:
+      - name: Install Python PIP
+        yum:
+            name: python-pip
+            state: latest
+
+      - name: Install AWS-CLI
+        pip:
+            name: awscli
+            state: latest
+
+# END

@@ -1,0 +1,17 @@
+---
+# This is a training playbook to learn YAML and Ansible.
+#
+- hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+      - name: ensure nologin file exists
+        copy:
+            content: ""
+            dest:    /etc/nologin
+            force:   no
+            owner:   root
+            group:   root
+            mode:    0440
+
+# END

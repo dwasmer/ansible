@@ -1,0 +1,18 @@
+---
+# tasks file for timezone
+- name: TZ Change Amazon Linux - edit clock file
+  when: ansible_distribution == "Amazon"
+  replace:
+    backup: yes
+    path: /etc/sysconfig/clock
+    regexp: '^ZONE=\"UTC\"'
+    replace: 'ZONE="America/Denver"'
+
+- name: TZ Change - create link to localtime
+  file:
+    force: yes
+    src: /usr/share/zoneinfo/America/Denver
+    dest: /etc/localtime
+    state: link
+
+# END

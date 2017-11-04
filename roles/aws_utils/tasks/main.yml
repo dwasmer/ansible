@@ -1,0 +1,35 @@
+---
+# tasks file for aws_utils
+- name: Install Amazon OS metric scripts and OS utilities
+  yum: name={{item}} state=latest
+  with_items:
+    - perl-Switch
+    - perl-DateTime
+    - perl-Sys-Syslog
+    - sysstat
+    - logwatch
+    - epel-release
+
+- name: Install pip
+  yum: name={{item}} state=latest
+  with_items:
+    - python-pip
+
+- name: Install AWS-CLI
+  pip:
+    name: awscli
+    state: latest
+
+- name: update all installed packages
+  yum:
+    name: "*"
+    state: latest
+
+
+- name: Edit logwatch.conf
+  lineinfile:
+    path: /usr/share/logwatch/default.conf/logwatch.conf
+    regexp: '^MailTo = root'
+    line: 'MailTo = david@wasmeronline.com'
+
+# END

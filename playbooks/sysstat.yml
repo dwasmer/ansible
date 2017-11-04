@@ -1,0 +1,24 @@
+---
+# install sysstat package
+#
+- hosts: webservers
+  become: true
+  tasks:
+      - name: install sysstat
+        yum:
+            name: sysstat
+            state: latest
+
+      - name: add sar cron jobs
+        blockinfile:
+            path: /var/spool/cron/root
+            create: yes
+            state: present
+            block: |
+                # Run system activity accounting tool every 10 minutes
+                */10 * * * * /usr/lib64/sa/sa1 1 1
+                # 0 * * * * /usr/lib64/sa/sa1 600 6 &
+                # Generate a daily summary of process accounting at 23:53
+                53 23 * * * /usr/lib64/sa/sa2 -A
+
+# END

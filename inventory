@@ -1,0 +1,17 @@
+#
+# Global ansible hosts file is /etc/ansible/hosts
+# local config file can override this ./ansible.cfg
+#
+
+[control]   # ansible group name
+dwasmer@192.168.0.13 ansible_connection=local   #Mac
+
+[loadbalancer]   # ansible group name
+
+[webservers]   # ansible group name
+ec2-user@54.148.228.58
+centos@54.213.244.82
+
+[database]
+
+# END

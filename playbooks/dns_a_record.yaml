@@ -1,0 +1,16 @@
+---
+# this is a placehoder for a future playbook
+# that will create a DNS route53 A-record
+#  Example:
+#  wasmeronline.com    A    54.148.228.58
+#
+#
+# this would read the inventory file to create
+# variables.
+
+- hosts: webservers
+  become: true
+  tasks:
+      - name: 
+
+# END

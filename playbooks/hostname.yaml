@@ -1,0 +1,28 @@
+---
+# change hostname
+#
+- hosts: webservers
+  become: true
+  tasks:
+      - name: change hostname
+        hostname:
+            name: "webserver"
+            # read vars from inventory file
+            # to give each system a unique
+            # hostname by keying off the IP address
+
+      - name: add new hostname to /etc/hosts
+        lineinfile:
+            dest: /etc/hosts
+            regexp: '^127\.0\.0\.1[ \t]+localhost'
+            line: '127.0.0.1 localhost webserver'
+            #
+            # replace this line...
+            # 127.0.0.1     localhost     localhost.localdomain *
+            #
+            # with this...
+            # 127.0.0.1     db            db.localdomain        *
+            #
+            state: present
+
+# END

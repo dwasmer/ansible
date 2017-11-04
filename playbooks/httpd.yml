@@ -1,0 +1,148 @@
+---
+# Install httpd packages
+#
+- hosts: webservers
+  become: true
+  tasks:
+
+    - name: Install Amazon OS metric scripts and OS utilities
+      yum: name={{item}} state=latest
+      with_items:
+          - perl-Switch
+          - perl-DateTime
+          - perl-Sys-Syslog
+          - perl-LWP-Protocol-https
+          - sysstat
+          - logwatch
+
+    - name: install the latest web components
+      yum: pkg={{item}} state=latest
+      with_items:
+          - httpd
+          - git
+          - epel-release
+
+    - name: install python
+      yum: pkg={{item}} state=latest
+      with_items:
+          - python-pip
+          - python-virtualenv
+          - python-httplib2
+
+    - name: Install AWS-CLI
+      pip:
+          name: awscli
+          state: latest
+
+    - name: update all installed packages
+      yum:
+          name: "*"
+          state: latest
+
+    - name: TZ Change Amazon Linux - edit clock file
+      when: ansible_distribution == "Amazon"
+      replace:
+          backup: yes
+          path: /etc/sysconfig/clock
+          regexp: '^ZONE=\"UTC\"'
+          replace: 'ZONE="America/Denver"'
+
+    - name: TZ Change - create link to localtime
+      file:
+          force: yes
+          src: /usr/share/zoneinfo/America/Denver
+          dest: /etc/localtime
+          state: link
+
+    - name: Clone git repo containing website
+      git:
+        repo: https://github.com/dwasmer/myweb.git
+        dest: /var/www/html
+        version: develop
+
+    - name: start httpd at boot
+      service:
+        name: httpd
+        enabled: yes
+        state: started
+
+    - name: Edit logwatch.conf
+      lineinfile:
+          path: /usr/share/logwatch/default.conf/logwatch.conf
+          regexp: '^MailTo = root'
+          line: 'MailTo = david@wasmeronline.com'
+
+    - name: add sar cron jobs
+      blockinfile:
+          path: /var/spool/cron/root
+          create: yes
+          state: present
+          block: |
+              # Run system activity accounting tool every 10 minutes
+              */10 * * * * /usr/lib64/sa/sa1 1 1
+              # 0 * * * * /usr/lib64/sa/sa1 600 6 &
+              # Generate a daily summary of process accounting at 23:53
+              53 23 * * * /usr/lib64/sa/sa2 -A
+              # run-parts
+              08 * * * * run-parts /etc/cron.hourly
+              02 4 * * * run-parts /etc/cron.daily
+              22 4 * * 0 run-parts /etc/cron.weekly
+              42 4 1 * * run-parts /etc/cron.monthly
+
+    - name: append centos .bashrc
+      when: ansible_distribution == "CentOS"
+      blockinfile:
+          path: /home/centos/.bashrc
+          backup: yes
+          state: present
+          block: |
+              # If not running interactively, do nothing
+              case $- in
+                   *i* ) ;;
+                    *  ) return;;
+              esac
+              # User specific aliases and functions
+              export PS1="\n\[$(tput sgr0)\]\[\033[38;5;2m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) $ \[$(tput sgr0)\]"
+              set -o vi
+
+    - name: append ec2-user .bashrc
+      when: ansible_distribution == "Amazon"
+      blockinfile:
+          path: /home/ec2-user/.bashrc
+          backup: yes
+          state: present
+          block: |
+              # If not running interactively, do nothing
+              case $- in
+                   *i* ) ;;
+                    *  ) return;;
+              esac
+              # User specific aliases and functions
+              export PS1="\n\[$(tput sgr0)\]\[\033[38;5;2m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) $ \[$(tput sgr0)\]"
+              set -o vi
+
+    - name: append root's .bashrc
+      blockinfile:
+          path: /root/.bashrc
+          backup: yes
+          state: present
+          block: |
+               # If not running interactively, do nothing
+               case $- in
+                   *i*) ;;
+                     *) return;;
+               esac
+               # User specific aliases and functions
+               export PS1="\n\[$(tput sgr0)\]\[\033[38;5;1m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) # \[$(tput sgr0)\]"
+               set -o vi
+
+#  handlers:
+#    - name: restart apache2
+#      service:
+#          name: httpd
+#          state: reloaded
+#
+#    - name: reboot server
+#      command: shutdown -r now "Reboot required after kernel update"
+#
+# END

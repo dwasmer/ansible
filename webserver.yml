@@ -1,0 +1,16 @@
+---
+# Build webserver from Amazon ec2 instances running 
+# either Amazon Linux AMI or CentOS AMI.
+#
+# Prequisites:
+#    1. ec2 instance must be up and running
+#    2. ansible must have ssh access to ec2 instance
+#    3. inventory file must include IP and login
+#
+- hosts: webservers
+  become: true
+  roles:
+    - aws_utils
+    - osconfig
+    - timezone
+    - httpd

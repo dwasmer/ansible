@@ -1,0 +1,46 @@
+---
+# Install Apache on hosts
+#
+- hosts: webservers
+  become: true
+  tasks:
+
+      - name: install the latest web packages
+        apt:
+            name: "{{item}}"
+            state: present
+            update_cache: yes
+        with_items:
+            - apache2
+            - libapache2-mod-wsgi
+            - python-pip
+            - python-virtualenv
+
+      - name: add index.html template
+        template:
+            src: /Users/dwasmer/ansible/templates/index.html
+            dest: /var/www/html/index.html
+            force: no
+            owner: root
+            group: root
+            mode: 0644
+
+      - name: start apache2 now and at boot
+        service:
+            name: apache2
+            enabled: yes
+            state: started
+
+      - name: ensure mod_wsgi enabled and restart apache2 if not
+        apache2_module:
+            state: present
+            name: wsgi
+            notify: restart apache2
+
+   handlers:
+     - name: restart apache2
+       service:
+           name: apache2
+           state: restarted
+
+# END

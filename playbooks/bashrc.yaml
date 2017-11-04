@@ -1,0 +1,41 @@
+---
+# append .bashrc file
+#
+- hosts: webservers
+  tasks:
+      - name: append ec2-user .bashrc
+        become: true
+        become_user: ec2-user
+        blockinfile:
+            path: /home/ec2-user/.bashrc
+            backup: yes
+            state: present
+            block: |
+               # If not running interactively, do nothing
+               case $- in
+                   *i*) ;;
+                     *) return;;
+               esac
+               # User specific aliases and functions
+               export PS1="\n\[$(tput sgr0)\]\[\033[38;5;2m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) $ \[$(tput sgr0)\]"
+               set -o vi
+            
+      - name: append ec2-user .bashrc
+        become: true
+        become_user: root
+        blockinfile:
+            path: /root/.bashrc
+            backup: yes
+            state: present
+            block: |
+               # If not running interactively, do nothing
+               case $- in
+                   *i*) ;;
+                     *) return;;
+               esac
+               # User specific aliases and functions
+               export PS1="\n\[$(tput sgr0)\]\[\033[38;5;1m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) # \[$(tput sgr0)\]"
+               set -o vi
+
+
+# END

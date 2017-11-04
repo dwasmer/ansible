@@ -1,0 +1,21 @@
+---
+# change default UTC Time Zone to Mountain Time.
+#
+- hosts: webservers
+  become: true
+  tasks:
+      - name: change ZONE in clock file
+        replace:
+            backup: yes
+            path: /etc/sysconfig/clock
+            regexp: '^ZONE=\"UTC\"'
+            replace: 'ZONE="America/Denver"'
+
+      - name: create link to localtime
+        file:
+            force: yes
+            src: /usr/share/zoneinfo/America/Denver
+            dest: /etc/localtime
+            state: link
+
+# END
