@@ -23,6 +23,7 @@
       - ksh
       - mlocate
       - nano
+      - figlet
 
 - name: install banner
   when: ansible_distribution == "Amazon"
