@@ -17,10 +17,30 @@
       22 4 * * 0 run-parts /etc/cron.weekly
       42 4 1 * * run-parts /etc/cron.monthly
 
-- name: install ksh on CentOS
+- name: install ksh
   yum: name={{item}} state=latest
   with_items:
       - ksh
+      - mlocate
+      - nano
+
+- name: install banner
+  when: ansible_distribution == "Amazon"
+  yum: name={{item}} state=latest
+  with_items:
+      - figlet
+
+- name: install banner
+  when: ansible_distribution == "CentOS"
+  yum: name={{item}} state=latest
+  with_items:
+      - banner
+
+- name: yum check-update
+  shell: 'yum check-update || test $? -eq 100'
+
+- name: yum clean all
+  shell: 'yum clean all'
 
 - name: append centos .bashrc
   when: ansible_distribution == "CentOS"
@@ -35,10 +55,6 @@
         *  ) return;;
       esac
       # User specific aliases and functions
-      alias ls="command ls ${colorflag}"
-      alias grep='grep --color=auto'
-      alias fgrep='fgrep --color=auto'
-      alias egrep='egrep --color=auto'
       alias c=clear
       export PS1="\n\[$(tput sgr0)\]\[\033[38;5;2m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) $ \[$(tput sgr0)\]"
       set -o vi
@@ -56,6 +72,11 @@
         *  ) return;;
       esac
       # User specific aliases and functions
+      alias ls="command ls ${colorflag}"
+      alias grep='grep --color=auto'
+      alias fgrep='fgrep --color=auto'
+      alias egrep='egrep --color=auto'
+      alias c=clear
       export PS1="\n\[$(tput sgr0)\]\[\033[38;5;2m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) $ \[$(tput sgr0)\]"
       set -o vi
 
@@ -71,6 +92,11 @@
         *) return;;
       esac
       # User specific aliases and functions
+      alias ls="command ls ${colorflag}"
+      alias grep='grep --color=auto'
+      alias fgrep='fgrep --color=auto'
+      alias egrep='egrep --color=auto'
+      alias c=clear
       export PS1="\n\[$(tput sgr0)\]\[\033[38;5;1m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h (\W) # \[$(tput sgr0)\]"
       set -o vi
 
